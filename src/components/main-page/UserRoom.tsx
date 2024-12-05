@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { contextData } from "@/components/context/context";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/components/firebase/config";
 
 const UserRoom = () => {
-  const { userInfo, checkIfUserLogged } = useContext(contextData);
+  const { userInfo, currentRoom, setCurrentRoom } = useContext(contextData);
 
   const deleteRoom = async () => {
-    delete userInfo.room;
+    setCurrentRoom({});
 
     const washingtonRef = doc(db, "users", `${userInfo.userId}`);
     await updateDoc(washingtonRef, {
@@ -15,15 +15,19 @@ const UserRoom = () => {
     });
   };
 
+  useEffect(() => {
+    setCurrentRoom(userInfo.room);
+  }, []);
+
   return (
     <div className="w-[400px] min-h-[600px] flex flex-col items-center border">
       <p className="font-semibold border-b border-red-600 text-lg">
         Ваша комната
       </p>
       <div className="w-full font-semibold text-lg">
-        {userInfo.room.roomNumber ? (
+        {currentRoom?.roomNumber ? (
           <div className="flex justify-center gap-4 py-4 bg-gray-100 my-2">
-            <p>Ваша комната номер - {userInfo.room.roomNumber}</p> |
+            <p>Ваша комната номер - {currentRoom.roomNumber}</p> |
             <div
               onClick={() => deleteRoom()}
               className="cursor-pointer border-b hover:border-b hover:border-red-600"

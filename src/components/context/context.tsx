@@ -8,7 +8,10 @@ type ContextProps = {
   auth: boolean;
   setAuth: (arg0: boolean) => void;
   userInfo: any;
+  setUserInfo: (arg0: any) => void;
   checkIfUserLogged: () => void;
+  currentRoom: any;
+  setCurrentRoom: (arg0: any) => void;
 };
 
 export const contextData = createContext({} as ContextProps);
@@ -20,6 +23,7 @@ type ContextOverAllProps = {
 export function ContextOverAll({ children }: ContextOverAllProps) {
   const [auth, setAuth] = useState(false);
   const [userInfo, setUserInfo] = useState<any>([]);
+  const [currentRoom, setCurrentRoom] = useState<any>(userInfo.room || []);
 
   useEffect(() => {
     !auth && checkIfUserLogged();
@@ -46,7 +50,10 @@ export function ContextOverAll({ children }: ContextOverAllProps) {
         auth,
         setAuth,
         userInfo,
+        setUserInfo,
         checkIfUserLogged,
+        currentRoom,
+        setCurrentRoom,
       }}
     >
       {children}
